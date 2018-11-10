@@ -33,7 +33,7 @@ public class Maze {
 
 	private Random random = new Random();
 	private String wallSide = "";
-	private int[] agent_position = null;
+	private int[] agent_position =  new int[2];
 	private String lastPositionContent = "  A  ";
 
 	// temporario. Algoritmo de busca vai ter q achar saida no labirinto depois.
@@ -83,6 +83,13 @@ public class Maze {
 		maze[5][0]="  " + coins[2] + "  ";
 		maze[5][2]="  " + coins[3] + "  ";
 		maze[7][1]="  " + coins[4] + "  ";
+		
+		maze[0][0] = "   A  ";
+		this.agent_position[0] = 0;
+		this.agent_position[1] = 0;
+		
+		this.saida[0]=7;
+		this.saida[1]=0;
 		
 	}
 
