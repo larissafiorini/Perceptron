@@ -1,5 +1,15 @@
+/*
+ * Rede neural faz a escolha dos movimentos do agente.
+ * 
+ * Retorna o que agente vai fazer e em que direcao.
+ * Ex: pular, direita
+ *  
+ * 
+ * */
 
-//Exemplo - Rede Perceptron com apenas 1 neuronio
+
+
+//Exemplo - Rede Perceptron com apenas 1 neuronio (trab precisa de 4/5 neuronios)
 import static java.lang.Math.*;
 import java.util.Scanner;
 
@@ -24,6 +34,14 @@ public class Perceptron {
 	}
 
 	private void inicializacao() {
+		/*
+		 * 1 - Buraco
+		 * 2 - Moeda
+		 * 3 - Parede
+		 * 4 - " - "
+		 * 
+		 * */
+		
 		//Conjunto de Treino : OR
         x1[0] = 0;  x2[0] = 0;  d[0] = 0;
         x1[1] = 0;  x2[1] = 1;  d[1] = 1;
@@ -34,7 +52,7 @@ public class Perceptron {
 	public void treinamento() { // algoritmo Regra Delta
 		// Treinamento
 		int epocas = 0, i;
-		double y, erro, erroGeral, eta = 1; // eta é a constante (taxa) de aprendizagem
+		double y, erro, erroGeral, eta = 1; // eta eh a constante (taxa) de aprendizagem
 		System.out.println("--- TREINAMENTO");
 		while (true) {
 			epocas++;
@@ -69,6 +87,17 @@ public class Perceptron {
 		Scanner dados = new Scanner(System.in);
 		System.out.println("\n--- GENERALIZACAO");
 		while (true) {
+			
+			/*
+			 * Entradas (relativas a percepcao do agente):
+			 * 1 - Cima
+			 * 2 - Baixo
+			 * 3 - Esquerda
+			 * 4 - Direita
+			 * 
+			 * */
+			
+			
 			// digita novas entradas
 			System.out.println("Digite -100 para encerrar");
 			System.out.print("Digite a entrada (x1): ");

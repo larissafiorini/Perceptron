@@ -10,7 +10,9 @@ public class AppPerceptron {
 		Maze maze = new Maze();
 		
 		Agent agent = new Agent(maze);
-		 Perceptron rede = new Perceptron();
+
+		
+		Perceptron rede = new Perceptron();
 		
 		 rede.treinamento();
 		 rede.generalizacao();

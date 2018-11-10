@@ -1,11 +1,15 @@
 public class Neuronio {
-	// Neuronio para 2 entradas
+	// Neuronio para 4 entradas
 
 	private double w0; // pesos
 	private double w1;
 	private double w2;
 	private double w3;
 	private double w4;
+	
+	public Neuronio() {
+		
+	}
 
 	public double getW3() {
 		return w3;
