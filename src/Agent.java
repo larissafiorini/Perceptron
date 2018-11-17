@@ -7,6 +7,8 @@ import javax.swing.event.TreeWillExpandListener;
 
 public class Agent {
 	private Maze maze;
+	private Perceptron perceptron;
+	
 	private int chestsPositions[] = new int[8];
 	int chestsPositionsCont;
 	private int exitPosition[] = new int[2];
@@ -29,36 +31,82 @@ public class Agent {
 
 	public Agent(Maze maze) {
 		this.maze = maze;
-		sortDirection();
 	}
 
-	public void explore() throws InterruptedException, IOException {
-		while ( ! maze.isExitFree()) {
-			for (int j = 0; j < 50; j++) {
-				System.out.println();
+
+	
+	public void escolheDirecao() {
+		int feedbackPerceptron=0;
+		while(!currentPositionContent.contains("S")) {
+			int[] position = maze.getAgentPosition();
+			/* PERCEPTRON AQUI */
+			int x1, x2, x3, x4;
+			x1 = codificaArea(maze.getMaze()[position[0] -1] [position[1]]);
+			x2 = codificaArea(maze.getMaze()[position[0]] [position[1] +1]);
+			x3 = codificaArea(maze.getMaze()[position[0] +1] [position[1]]);
+			x4 = codificaArea(maze.getMaze()[position[0]] [position[1] -1]);
+			int [] saidasPerceptron = perceptron.defineAcao(x1, x2, x3, x4);
+			int acao, direcao, maiorValorDirecao=-1, maiorIndiceDirecao=-1;
+			//Escolhe qual acao (andar/pular) de acordo com saída da rede neural:
+			if(saidasPerceptron[0]>saidasPerceptron[1]) {acao = 0;}else {acao=1;}
+			//Escolhe qual direcao (cima, direita, baixo, esquerda) de acordo com saída da rede neural:
+			for(int i=2; i<6;i++) {
+				if(saidasPerceptron[i]>maiorValorDirecao) {
+					maiorValorDirecao = saidasPerceptron[i];
+					maiorIndiceDirecao = i;
+				}
 			}
-			if(coin.size() != maze.getCoins().length || chestsPositionsCont!=8) {
-				scan();
-				move();
-				explorePos();
-				printData();
+			switch (maiorIndiceDirecao) {
+				case 2:
+					currentDirection = "up";
+					break;
+				case 3:
+					currentDirection = "right";
+					break;
+				case 4:
+					currentDirection = "down";
+					break;
+				case 5:
+					currentDirection = "left";
+					break;
+				}
+			if(acao==0) {
+//				feedbackPerceptron = andar();
 			} else {
-				geneticAlg();
-//				distributeCoins();
+//				feedbackPerceptron = pularBuraco();
 			}
-			if(movements%20==0 && movements!=0) {
-				sortDirection();
-				move();
-				explorePos();
-				printData();
-			}
-			if(movements>=100) {
-				gameOver("O agente não econtrou moedas na sua área possivel de exploracao após 100 movimentos de busca.");
-				return;
-			}			
-			Thread.sleep(500);
+//			perceptron.reforcar(feedBackPerceptron);
 		}
 	}
+	
+	
+	public int codificaArea(String s) {
+		switch(s) {
+			case "   P  ": {
+				return 3;
+			}
+			
+			case "   B  ": {
+				return 1;
+			}
+			case "   -  ":{
+				return 4;
+			}
+		}
+		
+		if (s.replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]")) {
+			return 2;
+		}
+		return 0;
+	}
+	
+
+	
+	
+	
+	
+	
+	
 	
 	public void explorePos() {
 		if (currentPositionContent.replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]")) {
@@ -70,252 +118,17 @@ public class Agent {
 			currentPositionContent = "  -  ";
 		}
 	}
-
-	public void sortDirection() {
-		int n=0;
-		/* PERCEPTRON AQUI */
-//		if (currentDirection == null) {
-//			n = random.nextInt(4);
-//		} else {
-//			if (currentDirection.contains("up") || currentDirection.contains("down")) {
-//				n = random.nextInt(2) + 2;
-//			} else {
-//				n = random.nextInt(2);
-//			}
-//		}
-
-		switch (n) {
-		case 0:
-			currentDirection = "up";
-			break;
-		case 1:
-			currentDirection = "down";
-			break;
-		case 2:
-			currentDirection = "left";
-			break;
-		case 3:
-			currentDirection = "right";
-			break;
-		}
-	}
-
-	public void move() {
-		int[] position = maze.getAgentPosition();
-		int[] before = new int[2];
-		before[0] = position[0];
-		before[1] = position[1];
-		int x, y;
-
-		switch (currentDirection) {
-		case "up":
-			x = position[0] - 1;
-			y = position[1];
-			if (scanPos(x, y).contains("O") && validPos(x - 1, y)) {
-				position[0] = x - 1;
-				currentPositionContent = maze.getMaze()[position[0]][position[1]];
-				points = points+30;
-				movements++;
-				log = log+"\nPulou buraco! +30 pontos";
-				break;
-
-			} else {
-				if (validPos(x, y)) {
-					position[0] = x;
-					movements++;
-					currentPositionContent = maze.getMaze()[position[0]][position[1]];
-				} else {
-					sortDirection();
-					// move();
-
-				}
-			}
-			break;
-
-		case "down":
-			x = position[0] + 1;
-			y = position[1];
-			if (scanPos(x, y).contains("O") && validPos(x + 1, y)) {
-				position[0] = x + 1;
-				currentPositionContent = maze.getMaze()[position[0]][position[1]];
-				points = points+30;
-				movements++;
-				log = log+"\nPulou buraco! +30 pontos";
-				break;
-
-			} else {
-				if (validPos(x, y)) {
-					position[0] = x;
-					movements++;
-					currentPositionContent = maze.getMaze()[position[0]][position[1]];
-				} else {
-					sortDirection();
-					// move();
-				}
-			}
-			break;
-
-		case "left":
-			x = position[0];
-			y = position[1] - 1;
-			if (scanPos(x, y).contains("O") && validPos(x, y - 1)) {
-				position[1] = y - 1;
-				currentPositionContent = maze.getMaze()[position[0]][position[1]];
-				points = points+30;
-				movements++;
-				log = log+"\nPulou buraco! +30 pontos";
-				break;
-
-			} else {
-				if (validPos(x, y)) {
-					position[1] = y;
-					movements++;
-					currentPositionContent = maze.getMaze()[position[0]][position[1]];
-				} else {
-					sortDirection();
-					// move();
-				}
-			}
-			break;
-
-		case "right":
-			x = position[0];
-			y = position[1] + 1;
-			if (scanPos(x, y).contains("O") && validPos(x, y + 1)) {
-				position[1] = y + 1;
-				currentPositionContent = maze.getMaze()[position[0]][position[1]];
-				points = points+30;
-				movements++;
-				log = log+"\nPulou buraco! +30 pontos";
-				break;
-
-			} else {
-				if (validPos(x, y)) {
-					position[1] = y;
-					movements++;
-					currentPositionContent = maze.getMaze()[position[0]][position[1]];
-				} else {
-					sortDirection();
-					// move();
-				}
-
-			}
-		}
-
-		maze.updateAgentPosition(position, before);
-	}
-
+	
 	public boolean validPos(int x, int y) {
 		return validRangePos(x, y) && !maze.getMaze()[x][y].contains("P") && !maze.getMaze()[x][y].contains("O");
 	}
-
-	// Percepcao: verifica ate 2 casas nas 4 direcoes
-	public void scan() {
-		int x = maze.getAgentPosition()[0] - 1;
-		int y = maze.getAgentPosition()[1];
-
-		if (validRangePos(x, y) || validRangePos(x - 1, y)) {
-			if (scanPos(x, y).replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]")
-					|| (scanPos(x - 1, y).replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]") && validPos(x, y))) {
-				currentDirection = "up";
-
-			}
-
-		}
-
-		x = maze.getAgentPosition()[0];
-
-		y = maze.getAgentPosition()[1] + 1;
-		if (validRangePos(x, y) || validRangePos(x, y + 1)) {
-			if (scanPos(x, y).replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]")
-					|| (scanPos(x, y + 1).replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]") && validPos(x, y))) {
-
-				currentDirection = "right";
-
-			}
-
-		}
-
-		x = maze.getAgentPosition()[0] + 1;
-		y = maze.getAgentPosition()[1];
-
-		if (validRangePos(x, y) || validRangePos(x + 1, y)) {
-			if (scanPos(x, y).replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]")
-					|| (scanPos(x + 1, y).replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]") && validPos(x, y))) {
-
-				currentDirection = "down";
-
-			}
-
-		}
-
-		x = maze.getAgentPosition()[0];
-
-		y = maze.getAgentPosition()[1] - 1;
-		if (validRangePos(x, y) || validRangePos(x, y - 1)) {
-			if (scanPos(x, y).replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]")
-					|| (scanPos(x, y - 1).replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]") && validPos(x, y))) {
-
-				currentDirection = "left";
-
-			}
-
-		}
-
-	}
-
-	public String scanPos(int x, int y) {
-		if (!validRangePos(x, y))
-			return "invalid position";
-		if (maze.getMaze()[x][y].contains("B")) {	
-			saveChest(x, y);
-		}
-		if (maze.getMaze()[x][y].contains("S")) {
-			exitPosition[0] = x;
-			exitPosition[1] = y;
-		}
-		return maze.getMaze()[x][y];
+	
+	public boolean validRangePos(int i, int j) {
+		return (i >= 0 && i < maze.getMaze().length && j >= 0 && j < maze.getMaze()[0].length);
 	}
 	
 	
-	public void gameOver(String reason) {
-		for (int j = 0; j < 50; j++) {System.out.println();}
-		System.out.println(log+"      <------- log"+"\n_________________________________________________________");
-		System.out.println("------GAME OVER------");
-		System.out.println(reason);
-		System.out.println("Pontuacao: "+points);
-	}
-	
-	public void geneticAlg () {
-		int [] coinArray = toArray(this.coin);
-//		Genetic g = new Genetic(coinArray);
 
-//		coinDistribution = g.run();
-		for(int k=0; k<coinDistribution.length-1; k++) {
-			switch (coinDistribution[k]) {
-			case 0:
-				chestA.add(coinArray[k]);
-				break;
-			case 1:
-				chestB.add(coinArray[k]);
-				break;
-			case 2:
-				chestC.add(coinArray[k]);
-				break;
-			case 3:
-				chestD.add(coinArray[k]);
-			}
-		}
-		
-	}
-	
-	public int [] toArray(ArrayList a) {
-		int [] result = new int[a.size()+1];
-		for(int i=0; i<result.length-1; i++) {
-			result[i] = Integer.parseInt(a.get(i).toString());
-		}
-		return result;
-	}
 	
 	public void p(int [] v) {
 		for(int i=0; i<v.length; i++) {
@@ -342,22 +155,269 @@ public class Agent {
 		maze.printMaze();
 	}
 	
-	public boolean validRangePos(int i, int j) {
-		return (i >= 0 && i < maze.getMaze().length && j >= 0 && j < maze.getMaze()[0].length);
+	public void gameOver(String reason) {
+		for (int j = 0; j < 50; j++) {System.out.println();}
+		System.out.println(log+"      <------- log"+"\n_________________________________________________________");
+		System.out.println("------GAME OVER------");
+		System.out.println(reason);
+		System.out.println("Pontuacao: "+points);
 	}
+	
+	
+	
+	
+//	public int [] toArray(ArrayList a) {
+//	int [] result = new int[a.size()+1];
+//	for(int i=0; i<result.length-1; i++) {
+//		result[i] = Integer.parseInt(a.get(i).toString());
+//	}
+//	return result;
+//}
 
-	public void saveChest(int x, int y) {
-		for (int i = 0; i < 7; i = i + 2) {
-			if (chestsPositions[i] == x && chestsPositions[i + 1] == y) {
-				return;
-			}
-		}
-		if (chestsPositionsCont < 8) {
-			chestsPositions[chestsPositionsCont] = x;
-			chestsPositionsCont++;
-			chestsPositions[chestsPositionsCont] = y;
-			chestsPositionsCont++;
-		}
-		movements = 0;
-	}
+//	public void move() {
+//		int[] position = maze.getAgentPosition();
+//		int[] before = new int[2];
+//		before[0] = position[0];
+//		before[1] = position[1];
+//		int x, y;
+//
+//		switch (currentDirection) {
+//		case "up":
+//			x = position[0] - 1;
+//			y = position[1];
+//			if (scanPos(x, y).contains("O") && validPos(x - 1, y)) {
+//				position[0] = x - 1;
+//				currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//				points = points+30;
+//				movements++;
+//				log = log+"\nPulou buraco! +30 pontos";
+//				break;
+//
+//			} else {
+//				if (validPos(x, y)) {
+//					position[0] = x;
+//					movements++;
+//					currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//				} else {
+//					escolheDirecao();
+//					// move();
+//
+//				}
+//			}
+//			break;
+//
+//		case "down":
+//			x = position[0] + 1;
+//			y = position[1];
+//			if (scanPos(x, y).contains("O") && validPos(x + 1, y)) {
+//				position[0] = x + 1;
+//				currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//				points = points+30;
+//				movements++;
+//				log = log+"\nPulou buraco! +30 pontos";
+//				break;
+//
+//			} else {
+//				if (validPos(x, y)) {
+//					position[0] = x;
+//					movements++;
+//					currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//				} else {
+//					escolheDirecao();
+//					// move();
+//				}
+//			}
+//			break;
+//
+//		case "left":
+//			x = position[0];
+//			y = position[1] - 1;
+//			if (scanPos(x, y).contains("O") && validPos(x, y - 1)) {
+//				position[1] = y - 1;
+//				currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//				points = points+30;
+//				movements++;
+//				log = log+"\nPulou buraco! +30 pontos";
+//				break;
+//
+//			} else {
+//				if (validPos(x, y)) {
+//					position[1] = y;
+//					movements++;
+//					currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//				} else {
+//					escolheDirecao();
+//					// move();
+//				}
+//			}
+//			break;
+//
+//		case "right":
+//			x = position[0];
+//			y = position[1] + 1;
+//			if (scanPos(x, y).contains("O") && validPos(x, y + 1)) {
+//				position[1] = y + 1;
+//				currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//				points = points+30;
+//				movements++;
+//				log = log+"\nPulou buraco! +30 pontos";
+//				break;
+//
+//			} else {
+//				if (validPos(x, y)) {
+//					position[1] = y;
+//					movements++;
+//					currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//				} else {
+//					escolheDirecao();
+//					// move();
+//				}
+//
+//			}
+//		}
+//
+//		maze.updateAgentPosition(position, before);
+//	}
+
+
+
+//	// Percepcao: verifica ate 2 casas nas 4 direcoes
+//	public void scan() {
+//		int x = maze.getAgentPosition()[0] - 1;
+//		int y = maze.getAgentPosition()[1];
+//
+//		if (validRangePos(x, y) || validRangePos(x - 1, y)) {
+//			if (scanPos(x, y).replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]")
+//					|| (scanPos(x - 1, y).replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]") && validPos(x, y))) {
+//				currentDirection = "up";
+//
+//			}
+//
+//		}
+//
+//		x = maze.getAgentPosition()[0];
+//
+//		y = maze.getAgentPosition()[1] + 1;
+//		if (validRangePos(x, y) || validRangePos(x, y + 1)) {
+//			if (scanPos(x, y).replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]")
+//					|| (scanPos(x, y + 1).replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]") && validPos(x, y))) {
+//
+//				currentDirection = "right";
+//
+//			}
+//
+//		}
+//
+//		x = maze.getAgentPosition()[0] + 1;
+//		y = maze.getAgentPosition()[1];
+//
+//		if (validRangePos(x, y) || validRangePos(x + 1, y)) {
+//			if (scanPos(x, y).replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]")
+//					|| (scanPos(x + 1, y).replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]") && validPos(x, y))) {
+//
+//				currentDirection = "down";
+//
+//			}
+//
+//		}
+//
+//		x = maze.getAgentPosition()[0];
+//
+//		y = maze.getAgentPosition()[1] - 1;
+//		if (validRangePos(x, y) || validRangePos(x, y - 1)) {
+//			if (scanPos(x, y).replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]")
+//					|| (scanPos(x, y - 1).replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]") && validPos(x, y))) {
+//
+//				currentDirection = "left";
+//
+//			}
+//
+//		}
+//
+//	}
+
+//	public String scanPos(int x, int y) {
+//		if (!validRangePos(x, y))
+//			return "invalid position";
+//		if (maze.getMaze()[x][y].contains("B")) {	
+//			saveChest(x, y);
+//		}
+//		if (maze.getMaze()[x][y].contains("S")) {
+//			exitPosition[0] = x;
+//			exitPosition[1] = y;
+//		}
+//		return maze.getMaze()[x][y];
+//	}
+	
+	
+
+	
+//	public void geneticAlg () {
+//		int [] coinArray = toArray(this.coin);
+////		Genetic g = new Genetic(coinArray);
+//
+////		coinDistribution = g.run();
+//		for(int k=0; k<coinDistribution.length-1; k++) {
+//			switch (coinDistribution[k]) {
+//			case 0:
+//				chestA.add(coinArray[k]);
+//				break;
+//			case 1:
+//				chestB.add(coinArray[k]);
+//				break;
+//			case 2:
+//				chestC.add(coinArray[k]);
+//				break;
+//			case 3:
+//				chestD.add(coinArray[k]);
+//			}
+//		}
+//		
+//	}
+	
+
+
+//	public void saveChest(int x, int y) {
+//		for (int i = 0; i < 7; i = i + 2) {
+//			if (chestsPositions[i] == x && chestsPositions[i + 1] == y) {
+//				return;
+//			}
+//		}
+//		if (chestsPositionsCont < 8) {
+//			chestsPositions[chestsPositionsCont] = x;
+//			chestsPositionsCont++;
+//			chestsPositions[chestsPositionsCont] = y;
+//			chestsPositionsCont++;
+//		}
+//		movements = 0;
+//	}
+	
+	
+//	public void explore() throws InterruptedException, IOException {
+//	while ( ! maze.isExitFree()) {
+//		for (int j = 0; j < 50; j++) {
+//			System.out.println();
+//		}
+//		if(coin.size() != maze.getCoins().length || chestsPositionsCont!=8) {
+//			scan();
+//			move();
+//			explorePos();
+//			printData();
+//		} else {
+//			geneticAlg();
+////			distributeCoins();
+//		}
+//		if(movements%20==0 && movements!=0) {
+//			escolheDirecao();
+//			move();
+//			explorePos();
+//			printData();
+//		}
+//		if(movements>=100) {
+//			gameOver("O agente não econtrou moedas na sua área possivel de exploracao após 100 movimentos de busca.");
+//			return;
+//		}			
+//		Thread.sleep(500);
+//	}
+//}
 }

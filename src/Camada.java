@@ -19,4 +19,13 @@ public class Camada {
 	public void addNeuronio(Neuronio neuronio) {
 		neuronios.add(neuronio);
 	}
+	
+	public Neuronio getNeuronioByName(String name) {
+		for(Neuronio n: neuronios) {
+			if(name.equals(n.getNome())) {
+				return n;
+			}
+		}
+		return null;
+	}
 }
