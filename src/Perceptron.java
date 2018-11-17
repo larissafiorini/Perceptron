@@ -20,13 +20,6 @@ public class Perceptron {
 	
 	private Camada camadaEntrada = new Camada();
 	private Camada camadaSaida = new Camada();
-	private int x1[]; // 1a entrada
-	private int x2[]; // 2a entrada
-	// precisa de mais duas
-	private int x3[]; // 3a entrada
-	private int x4[]; // 4a entrada
-
-	private int d[]; // saida desejada
 
 	public Perceptron() {
 		camadaEntrada.addNeuronio(new Neuronio("n1"));
@@ -117,47 +110,47 @@ public class Perceptron {
 //		}
 //	}
 
-	public void generalizacao() { // uso da rede
-		// Generalizacao - Teste da rede
-		int entrada1, entrada2, entrada3, entrada4;
-		Scanner dados = new Scanner(System.in);
-		System.out.println("\n--- GENERALIZACAO");
-		while (true) {
-			
-			/*
-			 * Entradas (relativas a percepcao do agente):
-			 * 1 - Cima
-			 * 2 - Baixo
-			 * 3 - Esquerda
-			 * 4 - Direita
-			 * 
-			 * */
-			
-			
-			// digita novas entradas
-			System.out.println("Digite -100 para encerrar");
-			System.out.print("Digite a entrada (x1): ");
-			entrada1 = dados.nextInt();
-			if (entrada1 == -100)
-				break;
-
-			System.out.print("Digite a entrada (x2): ");
-			entrada2 = dados.nextInt();
-			if (entrada2 == -100)
-				break;
-
-			System.out.print("Digite a entrada (x3): ");
-			entrada3 = dados.nextInt();
-			if (entrada3 == -100)
-				break;
-
-			System.out.print("Digite a entrada (x4): ");
-			entrada4 = dados.nextInt();
-			if (entrada4 == -100)
-				break;
-
-			// propagacao
-//			System.out.println("Saida Gerada pela rede: " + neuronio.calculaY(entrada1, entrada2, entrada3, entrada4));
-		}
-	}
+//	public void generalizacao() { // uso da rede
+//		// Generalizacao - Teste da rede
+//		int entrada1, entrada2, entrada3, entrada4;
+//		Scanner dados = new Scanner(System.in);
+//		System.out.println("\n--- GENERALIZACAO");
+//		while (true) {
+//			
+//			/*
+//			 * Entradas (relativas a percepcao do agente):
+//			 * 1 - Cima
+//			 * 2 - Baixo
+//			 * 3 - Esquerda
+//			 * 4 - Direita
+//			 * 
+//			 * */
+//			
+//			
+//			// digita novas entradas
+//			System.out.println("Digite -100 para encerrar");
+//			System.out.print("Digite a entrada (x1): ");
+//			entrada1 = dados.nextInt();
+//			if (entrada1 == -100)
+//				break;
+//
+//			System.out.print("Digite a entrada (x2): ");
+//			entrada2 = dados.nextInt();
+//			if (entrada2 == -100)
+//				break;
+//
+//			System.out.print("Digite a entrada (x3): ");
+//			entrada3 = dados.nextInt();
+//			if (entrada3 == -100)
+//				break;
+//
+//			System.out.print("Digite a entrada (x4): ");
+//			entrada4 = dados.nextInt();
+//			if (entrada4 == -100)
+//				break;
+//
+//			// propagacao
+////			System.out.println("Saida Gerada pela rede: " + neuronio.calculaY(entrada1, entrada2, entrada3, entrada4));
+//		}
+//	}
 }

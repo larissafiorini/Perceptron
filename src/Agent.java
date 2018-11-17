@@ -36,11 +36,13 @@ public class Agent {
 
 
 	
-	public void escolheDirecao() {
+	public void escolheDirecao() throws InterruptedException {
 		int feedbackPerceptron=0;
 		while(!currentPositionContent.contains("S")) {
+			for (int j = 0; j < 50; j++) {
+				System.out.println();
+			}
 			int[] position = maze.getAgentPosition();
-			/* PERCEPTRON AQUI */
 			int x1, x2, x3, x4;
 			if(!validRangePos(position[0] -1, position[1])) {
 				x1=3;
@@ -72,10 +74,13 @@ public class Agent {
 			else {
 				x4 = codificaArea(maze.getMaze()[position[0]] [position[1] -1]);
 			}
+			//CHAMADA DO PERCEPTRON:
 			int [] saidasPerceptron = perceptron.defineAcao(x1, x2, x3, x4);
+			
 			int acao, direcao, maiorValorDirecao=-1, maiorIndiceDirecao=-1;
 			//Escolhe qual acao (andar/pular) de acordo com saída da rede neural:
 			if(saidasPerceptron[0]>saidasPerceptron[1]) {acao = 0;}else {acao=1;}
+			
 			//Escolhe qual direcao (cima, direita, baixo, esquerda) de acordo com saída da rede neural:
 			for(int i=2; i<6;i++) {
 				if(saidasPerceptron[i]>maiorValorDirecao) {
@@ -88,21 +93,24 @@ public class Agent {
 					currentDirection = "up";
 					break;
 				case 3:
-					currentDirection = "right";
-					break;
-				case 4:
 					currentDirection = "down";
 					break;
-				case 5:
+				case 4:
 					currentDirection = "left";
 					break;
-				}
-			if(acao==0) {
-//				feedbackPerceptron = andar();
-			} else {
-//				feedbackPerceptron = pularBuraco();
+				case 5:
+					currentDirection = "right";
+					break;
 			}
-//			perceptron.reforcar(feedBackPerceptron);
+			
+			if(acao==0) {
+				feedbackPerceptron = andar();
+			} else {
+				feedbackPerceptron = pularBuraco();
+			}
+			printData();
+			perceptron.reforcar(feedbackPerceptron);
+			Thread.sleep(2000);
 		}
 	}
 	
@@ -127,8 +135,147 @@ public class Agent {
 		return 0;
 	}
 	
-
 	
+	public int andar() {
+		int[] position = maze.getAgentPosition();
+		int[] before = new int[2];
+		before[0] = position[0];
+		before[1] = position[1];
+		int x=-1, y=-1;
+
+		switch (currentDirection) {
+			case "up":
+				x = position[0] - 1;
+				y = position[1];
+			case "down":
+				x = position[0] + 1;
+				y = position[1];
+			case "left":
+				x = position[0];
+				y = position[1] -1;
+			case "rigth":
+				x = position[0];
+				y = position[1] +1;
+		}
+		String conteudo = scanPos(x, y);
+		if(conteudo.equals("invalid position") || conteudo.contains("P")) {
+			log = log+"\nBateu em parede! -50 pontos";
+			points = points-50;
+			movements++;
+			return 3;
+		} else {
+			switch(conteudo) {
+				case "   B  ": {
+					log = log+"\nCaiu em buraco! -100 pontos";
+					points = points-100;
+					movements++;
+					currentPositionContent = maze.getMaze()[position[0]][position[1]];
+					break;
+				}
+				case "   S  ": {
+					log = log+"\nEncontrou Saida! +100 pontos";
+					points = points+100;
+					movements++;
+					currentPositionContent = maze.getMaze()[position[0]][position[1]];
+					break;
+				}
+				case "   -  ": {
+					log = log+"\nAndou uma casa vazia! +20 pontos";
+					points = points+20;
+					movements++;
+					currentPositionContent = maze.getMaze()[position[0]][position[1]];
+					break;
+				}
+			}
+			
+			if(conteudo.replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]")) {
+				log = log+"\nColetou moedas! + "+ conteudo.replaceAll(" ", "")+" pontos";
+				points = points+Integer.parseInt(conteudo.replaceAll(" ", ""));
+				movements++;
+			}
+		}
+		
+		maze.updateAgentPosition(position, before);
+		return codificaArea(conteudo);
+	}
+
+//		case "down":
+//			x = position[0] + 1;
+//			y = position[1];
+//			if (scanPos(x, y).contains("O") && validPos(x + 1, y)) {
+//				position[0] = x + 1;
+//				currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//				points = points+30;
+//				movements++;
+//				log = log+"\nPulou buraco! +30 pontos";
+//				break;
+//
+//			} else {
+//				if (validPos(x, y)) {
+//					position[0] = x;
+//					movements++;
+//					currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//				} else {
+//					escolheDirecao();
+//					// move();
+//				}
+//			}
+//			break;
+//
+//		case "left":
+//			x = position[0];
+//			y = position[1] - 1;
+//			if (scanPos(x, y).contains("O") && validPos(x, y - 1)) {
+//				position[1] = y - 1;
+//				currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//				points = points+30;
+//				movements++;
+//				log = log+"\nPulou buraco! +30 pontos";
+//				break;
+//
+//			} else {
+//				if (validPos(x, y)) {
+//					position[1] = y;
+//					movements++;
+//					currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//				} else {
+//					escolheDirecao();
+//					// move();
+//				}
+//			}
+//			break;
+//
+//		case "right":
+//			x = position[0];
+//			y = position[1] + 1;
+//			if (scanPos(x, y).contains("O") && validPos(x, y + 1)) {
+//				position[1] = y + 1;
+//				currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//				points = points+30;
+//				movements++;
+//				log = log+"\nPulou buraco! +30 pontos";
+//				break;
+//
+//			} else {
+//				if (validPos(x, y)) {
+//					position[1] = y;
+//					movements++;
+//					currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//				} else {
+//					escolheDirecao();
+//					// move();
+//				}
+//
+//			}
+//		}
+//
+//		maze.updateAgentPosition(position, before);
+//	}
+	
+	
+	public int pularBuraco() {
+		return 0;
+	}
 	
 	
 	
@@ -155,6 +302,19 @@ public class Agent {
 	}
 	
 	
+	
+	public String scanPos(int x, int y) {
+		if (!validRangePos(x, y))
+			return "invalid position";
+		if (maze.getMaze()[x][y].contains("B")) {	
+			//saveChest(x, y);
+		}
+		if (maze.getMaze()[x][y].contains("S")) {
+			exitPosition[0] = x;
+			exitPosition[1] = y;
+		}
+		return maze.getMaze()[x][y];
+	}
 
 	
 	public void p(int [] v) {
@@ -363,18 +523,7 @@ public class Agent {
 //
 //	}
 
-//	public String scanPos(int x, int y) {
-//		if (!validRangePos(x, y))
-//			return "invalid position";
-//		if (maze.getMaze()[x][y].contains("B")) {	
-//			saveChest(x, y);
-//		}
-//		if (maze.getMaze()[x][y].contains("S")) {
-//			exitPosition[0] = x;
-//			exitPosition[1] = y;
-//		}
-//		return maze.getMaze()[x][y];
-//	}
+
 	
 	
 

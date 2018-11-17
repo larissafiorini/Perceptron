@@ -403,13 +403,13 @@ public class Maze {
 		if (lastPositionContent.contains("B") || lastPositionContent.contains("S")) {
 			maze[before[0]][before[1]] = lastPositionContent;
 		} else {
-			maze[before[0]][before[1]] = "  -  ";
+			maze[before[0]][before[1]] = "   -  ";
 		}
 
 		this.agent_position[0] = position[0];
 		this.agent_position[1] = position[1];
 		lastPositionContent = maze[position[0]][position[1]];
-		maze[position[0]][position[1]] = "  A  ";
+		maze[position[0]][position[1]] = "   A  ";
 	}
 
 }
