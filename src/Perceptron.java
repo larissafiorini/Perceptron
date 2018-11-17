@@ -20,6 +20,7 @@ public class Perceptron {
 	
 	private Camada camadaEntrada = new Camada();
 	private Camada camadaSaida = new Camada();
+	private int pontuacao=0;
 
 	public Perceptron() {
 		camadaEntrada.addNeuronio(new Neuronio("n1"));
@@ -63,8 +64,38 @@ public class Perceptron {
 		
 	}
 	
+	
+	
+	
+	
+	
 	public void reforcar(int feedbackPerceptron) {
 		//ATUALIZAÇÃO DOS PESOS COM USO DE ALG GENÉTICO AQUI;
+		double [] pesos = new double[51];
+		int i=0;
+		for(Neuronio n: camadaEntrada.getNeuronios()){
+			pesos[i] = n.getW0();
+			pesos[i+1] = n.getW1();
+			pesos[i+2] = n.getW2();
+			pesos[i+3] = n.getW3();
+			pesos[i+4] = n.getW4();
+			i = i+5;
+		};
+		for(Neuronio n: camadaSaida.getNeuronios()){
+			pesos[i] = n.getW0();
+			pesos[i+1] = n.getW1();
+			pesos[i+2] = n.getW2();
+			pesos[i+3] = n.getW3();
+			pesos[i+4] = n.getW4();
+			i = i+5;
+			
+		};
+		pesos[50] = pontuacao;
+//		for(int j=0; j<pesos.length; j++) {
+//			System.out.print(pesos[j]+" ");
+//		}
+//		System.out.println("\n"+pesos.length);
+		
 		switch(feedbackPerceptron) {
 			case 1:
 				//BURACO

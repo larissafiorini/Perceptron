@@ -104,8 +104,8 @@ public class Agent {
 			}
 			
 			feedbackPerceptron = andar(acao);
-			printData();
 			perceptron.reforcar(feedbackPerceptron);
+			printData();
 			Thread.sleep(2000);
 		}
 	}
@@ -206,13 +206,13 @@ public class Agent {
 					log = log+"\nEncontrou Saida! +100 pontos";
 					points = points+100;
 					movements++;
-					currentPositionContent = maze.getMaze()[position[0]][position[1]];
+					currentPositionContent = maze.getMaze()[x][y];
 					break;
 				}
 				case "   -  ": {
 					log = log+"\nAndou uma casa vazia!";
 					movements++;
-					currentPositionContent = maze.getMaze()[position[0]][position[1]];
+					currentPositionContent = maze.getMaze()[x][y];
 					break;
 				}
 			}
