@@ -31,6 +31,7 @@ public class Agent {
 
 	public Agent(Maze maze) {
 		this.maze = maze;
+		perceptron = new Perceptron();
 	}
 
 
@@ -41,10 +42,36 @@ public class Agent {
 			int[] position = maze.getAgentPosition();
 			/* PERCEPTRON AQUI */
 			int x1, x2, x3, x4;
-			x1 = codificaArea(maze.getMaze()[position[0] -1] [position[1]]);
-			x2 = codificaArea(maze.getMaze()[position[0]] [position[1] +1]);
-			x3 = codificaArea(maze.getMaze()[position[0] +1] [position[1]]);
-			x4 = codificaArea(maze.getMaze()[position[0]] [position[1] -1]);
+			if(!validRangePos(position[0] -1, position[1])) {
+				x1=3;
+			}
+			else {
+				x1 = codificaArea(maze.getMaze()[position[0] -1] [position[1]]);
+			}
+			
+			
+			if(!validRangePos(position[0], position[1]+1)) {
+				x2=3;
+			}
+			else {
+				x2 = codificaArea(maze.getMaze()[position[0]] [position[1] +1]);
+			}
+			
+			
+			if(!validRangePos(position[0] +1, position[1])) {
+				x3=3;
+			}
+			else {
+				x3 = codificaArea(maze.getMaze()[position[0] +1] [position[1]]);
+			}
+			
+			
+			if(!validRangePos(position[0], position[1] -1)) {
+				x4=3;
+			}
+			else {
+				x4 = codificaArea(maze.getMaze()[position[0]] [position[1] -1]);
+			}
 			int [] saidasPerceptron = perceptron.defineAcao(x1, x2, x3, x4);
 			int acao, direcao, maiorValorDirecao=-1, maiorIndiceDirecao=-1;
 			//Escolhe qual acao (andar/pular) de acordo com saída da rede neural:

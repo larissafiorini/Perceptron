@@ -50,10 +50,10 @@ public class Perceptron {
 		for(Neuronio neuronio: camadaEntrada.getNeuronios()) {
 			neuronio.calculaY(x1, x2, x3, x4);
 		}
-		y1 = camadaEntrada.getNeuronios().get(1).getY();
-		y2 = camadaEntrada.getNeuronios().get(2).getY();
-		y3 = camadaEntrada.getNeuronios().get(3).getY();
-		y4 = camadaEntrada.getNeuronios().get(4).getY();
+		y1 = camadaEntrada.getNeuronios().get(0).getY();
+		y2 = camadaEntrada.getNeuronios().get(1).getY();
+		y3 = camadaEntrada.getNeuronios().get(2).getY();
+		y4 = camadaEntrada.getNeuronios().get(3).getY();
 		for(Neuronio neuronio: camadaSaida.getNeuronios()) {
 			neuronio.calculaY(y1, y2, y3, y4);
 		}
