@@ -90,10 +90,6 @@ public class Perceptron {
 			i = i+5;
 			
 		};
-		pesos[50] = pontuacao;
-		
-		Genetico gen = new Genetico();
-		gen.run();
 		
 //		for(int j=0; j<pesos.length; j++) {
 //			System.out.print(pesos[j]+" ");
@@ -103,15 +99,31 @@ public class Perceptron {
 		switch(feedbackPerceptron) {
 			case 1:
 				//BURACO
+				pontuacao -= 300;
+				System.out.println("pontuacao : "+pontuacao);
 			case 2:
 				//SAIDA
+				pontuacao += 500;
+				System.out.println("pontuacao : "+pontuacao);
 			case 3:
 				//PAREDE
+				pontuacao -= 200;
+				System.out.println("pontuacao : "+pontuacao);
 			case 4:
 				//VAZIO
+				pontuacao += 200;
+				System.out.println("pontuacao : "+pontuacao);
 			case 5:
 				//MOEDAS
+				pontuacao += 400;
+				System.out.println("pontuacao : "+pontuacao);
 		}
+		
+		pesos[50] = pontuacao;
+		
+		Genetico gen = new Genetico();
+		gen.run(pontuacao);
+		
 	}
 	
 	
