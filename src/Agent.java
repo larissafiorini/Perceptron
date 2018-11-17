@@ -79,7 +79,7 @@ public class Agent {
 			
 			int acao, direcao, maiorValorDirecao=-1, maiorIndiceDirecao=-1;
 			//Escolhe qual acao (andar/pular) de acordo com saída da rede neural:
-			if(saidasPerceptron[0]>saidasPerceptron[1]) {acao = 0;}else {acao=1;}
+			if(saidasPerceptron[0]>=saidasPerceptron[1]) {acao = 0;}else {acao=1;}
 			
 			//Escolhe qual direcao (cima, direita, baixo, esquerda) de acordo com saída da rede neural:
 			for(int i=2; i<6;i++) {
@@ -103,11 +103,7 @@ public class Agent {
 					break;
 			}
 			
-			if(acao==0) {
-				feedbackPerceptron = andar();
-			} else {
-				feedbackPerceptron = pularBuraco();
-			}
+			feedbackPerceptron = andar(acao);
 			printData();
 			perceptron.reforcar(feedbackPerceptron);
 			Thread.sleep(2000);
@@ -117,12 +113,14 @@ public class Agent {
 	
 	public int codificaArea(String s) {
 		switch(s) {
-			case "   P  ": {
-				return 3;
-			}
-			
 			case "   B  ": {
 				return 1;
+			}
+			case "   S  ": {
+				return 2;
+			}
+			case "   P  ": {
+				return 3;
 			}
 			case "   -  ":{
 				return 4;
@@ -130,15 +128,16 @@ public class Agent {
 		}
 		
 		if (s.replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]")) {
-			return 2;
+			return 5;
 		}
 		return 0;
 	}
 	
 	
-	public int andar() {
+	public int andar(int acao) {
 		int[] position = maze.getAgentPosition();
 		int[] before = new int[2];
+		int[] areaDepoisDaProximaArea = new int[2];
 		before[0] = position[0];
 		before[1] = position[1];
 		int x=-1, y=-1;
@@ -147,15 +146,23 @@ public class Agent {
 			case "up":
 				x = position[0] - 1;
 				y = position[1];
+				areaDepoisDaProximaArea[0] = x-1;
+				areaDepoisDaProximaArea[1] = y;
 			case "down":
 				x = position[0] + 1;
 				y = position[1];
+				areaDepoisDaProximaArea[0] = x+1;
+				areaDepoisDaProximaArea[1] = y;
 			case "left":
 				x = position[0];
 				y = position[1] -1;
+				areaDepoisDaProximaArea[0] = x;
+				areaDepoisDaProximaArea[1] = y-1;
 			case "rigth":
 				x = position[0];
 				y = position[1] +1;
+				areaDepoisDaProximaArea[0] = x;
+				areaDepoisDaProximaArea[1] = y+1;
 		}
 		String conteudo = scanPos(x, y);
 		if(conteudo.equals("invalid position") || conteudo.contains("P")) {
@@ -166,11 +173,23 @@ public class Agent {
 		} else {
 			switch(conteudo) {
 				case "   B  ": {
-					log = log+"\nCaiu em buraco! -100 pontos";
-					points = points-100;
-					movements++;
-					currentPositionContent = maze.getMaze()[position[0]][position[1]];
-					break;
+					if(acao==0) {
+						//cai no buraco
+						log = log+"\nCaiu em buraco! -100 pontos";
+						points = points-100;
+						movements++;
+						currentPositionContent = maze.getMaze()[position[0]][position[1]];
+						break;
+					} else {
+						//tenta pular buraco
+						String conteudoAreaPosterior = scanPos(areaDepoisDaProximaArea[0], areaDepoisDaProximaArea[1]); 
+						if(conteudoAreaPosterior.equals("invalid position") || conteudoAreaPosterior.contains("P")) {
+							log = log+"\nPosicao depois do buraco invalida, caiu no buraco! -100 pontos";
+							points = points-100;
+							movements++;
+							return 3;
+						}
+					}
 				}
 				case "   S  ": {
 					log = log+"\nEncontrou Saida! +100 pontos";
@@ -191,10 +210,12 @@ public class Agent {
 			if(conteudo.replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]")) {
 				log = log+"\nColetou moedas! + "+ conteudo.replaceAll(" ", "")+" pontos";
 				points = points+Integer.parseInt(conteudo.replaceAll(" ", ""));
+				currentPositionContent = "   -  ";
 				movements++;
 			}
 		}
-		
+		position[0] = x;
+		position[1] = y;
 		maze.updateAgentPosition(position, before);
 		return codificaArea(conteudo);
 	}
@@ -306,9 +327,6 @@ public class Agent {
 	public String scanPos(int x, int y) {
 		if (!validRangePos(x, y))
 			return "invalid position";
-		if (maze.getMaze()[x][y].contains("B")) {	
-			//saveChest(x, y);
-		}
 		if (maze.getMaze()[x][y].contains("S")) {
 			exitPosition[0] = x;
 			exitPosition[1] = y;

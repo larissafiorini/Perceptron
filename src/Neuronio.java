@@ -97,6 +97,6 @@ public class Neuronio {
 	}
 
 	public String toString() {
-		return "w0 = " + w0 + " w1= " + w1 + " w2= " + w2 + " w3= " + w3 + " w4= " + w4;
+		return "NOME: "+nome+"   w0 = " + w0 + " w1= " + w1 + " w2= " + w2 + " w3= " + w3 + " w4= " + w4+"   Y: "+y;
 	}
 }

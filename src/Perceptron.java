@@ -50,7 +50,9 @@ public class Perceptron {
 		for(Neuronio neuronio: camadaSaida.getNeuronios()) {
 			neuronio.calculaY(y1, y2, y3, y4);
 		}
-	
+		camadaSaida.getNeuronios().forEach(n -> {
+			System.out.println(n.toString());
+		});
 		int [] saidas = {camadaSaida.getNeuronioByName("n5").getY(),
 						camadaSaida.getNeuronioByName("n6").getY(),
 						camadaSaida.getNeuronioByName("n7").getY(),
@@ -63,6 +65,18 @@ public class Perceptron {
 	
 	public void reforcar(int feedbackPerceptron) {
 		//ATUALIZAÇÃO DOS PESOS COM USO DE ALG GENÉTICO AQUI;
+		switch(feedbackPerceptron) {
+			case 1:
+				//BURACO
+			case 2:
+				//SAIDA
+			case 3:
+				//PAREDE
+			case 4:
+				//VAZIO
+			case 5:
+				//MOEDAS
+		}
 	}
 	
 	
