@@ -13,7 +13,7 @@ public class Agent {
 	int chestsPositionsCont;
 	private int exitPosition[] = new int[2];
 	private ArrayList coin = new ArrayList<>();
-	private String currentPositionContent = "  -  ";
+	private String currentPositionContent = "   -  ";
 	private String currentDirection;
 	private Random random = new Random();
 	private int points = 0;
@@ -166,28 +166,39 @@ public class Agent {
 		}
 		String conteudo = scanPos(x, y);
 		if(conteudo.equals("invalid position") || conteudo.contains("P")) {
-			log = log+"\nBateu em parede! -50 pontos";
-			points = points-50;
-			movements++;
+			log = log+"\nBateu em parede! ";
+			points = points-100;
+			movements=0;
+			int [] inicialPosition = {0, 0};
+			before = new int[2];
+			maze.updateAgentPosition(inicialPosition, before);
+			currentPositionContent = "   -  ";
 			return 3;
 		} else {
 			switch(conteudo) {
 				case "   B  ": {
 					if(acao==0) {
 						//cai no buraco
-						log = log+"\nCaiu em buraco! -100 pontos";
+						log = log+"\nCaiu em buraco!";
 						points = points-100;
-						movements++;
-						currentPositionContent = maze.getMaze()[position[0]][position[1]];
-						break;
+						movements=0;
+						int [] inicialPosition = {0, 0};
+						before = new int[2];
+						maze.updateAgentPosition(inicialPosition, before);
+						currentPositionContent = "   -  ";
+						return 1;
 					} else {
 						//tenta pular buraco
 						String conteudoAreaPosterior = scanPos(areaDepoisDaProximaArea[0], areaDepoisDaProximaArea[1]); 
 						if(conteudoAreaPosterior.equals("invalid position") || conteudoAreaPosterior.contains("P")) {
-							log = log+"\nPosicao depois do buraco invalida, caiu no buraco! -100 pontos";
+							log = log+"\nPosicao depois do buraco invalida! Caiu no buraco!";
 							points = points-100;
-							movements++;
-							return 3;
+							movements=0;
+							int [] inicialPosition = {0, 0};
+							before = new int[2];
+							maze.updateAgentPosition(inicialPosition, before);
+							currentPositionContent = "   -  ";
+							return 1;
 						}
 					}
 				}
@@ -199,8 +210,7 @@ public class Agent {
 					break;
 				}
 				case "   -  ": {
-					log = log+"\nAndou uma casa vazia! +20 pontos";
-					points = points+20;
+					log = log+"\nAndou uma casa vazia!";
 					movements++;
 					currentPositionContent = maze.getMaze()[position[0]][position[1]];
 					break;
