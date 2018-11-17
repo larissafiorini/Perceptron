@@ -91,6 +91,10 @@ public class Perceptron {
 			
 		};
 		pesos[50] = pontuacao;
+		
+		Genetico gen = new Genetico();
+		gen.run();
+		
 //		for(int j=0; j<pesos.length; j++) {
 //			System.out.print(pesos[j]+" ");
 //		}
