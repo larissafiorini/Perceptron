@@ -69,7 +69,7 @@ public class Perceptron {
 	
 	
 	
-	public void reforcar(int feedbackPerceptron) {
+	public void reforcar(int feedbackPerceptron, int pontos) {
 		//ATUALIZAÇÃO DOS PESOS COM USO DE ALG GENÉTICO AQUI;
 		double [] pesos = new double[51];
 		int i=0;
@@ -121,11 +121,33 @@ public class Perceptron {
 				System.out.println("pontuacao : "+pontuacao);
 		}
 		
-		pesos[50] = pontuacao;
+		pesos[50] = pontos;
 		
-		Genetico gen = new Genetico(pesos, pontuacao);
-		gen.run(pesos,pontuacao);
+		Genetico gen = new Genetico(pesos, pontos);
+		pesos = gen.run(pesos,pontuacao);
 		
+		atualizaPesos(pesos);
+		
+	}
+	
+	public void atualizaPesos(double [] pesos) {
+		int j=0;
+		for(int i=0; i<4; i++) {
+			camadaEntrada.getNeuronios().get(i).setW0(pesos[j]);
+			camadaEntrada.getNeuronios().get(i).setW0(pesos[j+1]);
+			camadaEntrada.getNeuronios().get(i).setW0(pesos[j+2]);
+			camadaEntrada.getNeuronios().get(i).setW0(pesos[j+3]);
+			camadaEntrada.getNeuronios().get(i).setW0(pesos[j+4]);
+			j = j+5;
+		}
+		for(int i=0; i<6; i++) {
+			camadaSaida.getNeuronios().get(i).setW0(pesos[j]);
+			camadaSaida.getNeuronios().get(i).setW0(pesos[j+1]);
+			camadaSaida.getNeuronios().get(i).setW0(pesos[j+2]);
+			camadaSaida.getNeuronios().get(i).setW0(pesos[j+3]);
+			camadaSaida.getNeuronios().get(i).setW0(pesos[j+4]);
+			j = j+5;
+		}
 	}
 	
 	

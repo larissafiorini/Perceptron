@@ -104,7 +104,7 @@ public class Agent {
 			}
 			
 			feedbackPerceptron = andar(acao);
-			perceptron.reforcar(feedbackPerceptron);
+			perceptron.reforcar(feedbackPerceptron, points);
 			printData();
 			Thread.sleep(2000);
 		}
