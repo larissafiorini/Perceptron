@@ -123,7 +123,7 @@ public class Perceptron {
 		
 		pesos[50] = pontuacao;
 		
-		Genetico gen = new Genetico();
+		Genetico gen = new Genetico(pesos, pontuacao);
 		gen.run(pesos,pontuacao);
 		
 	}
