@@ -21,6 +21,7 @@ public class Perceptron {
 	private Camada camadaEntrada = new Camada();
 	private Camada camadaSaida = new Camada();
 	private int pontuacao=0;
+	private int cont=0;
 
 	public Perceptron() {
 		camadaEntrada.addNeuronio(new Neuronio("n1"));
@@ -92,6 +93,7 @@ public class Perceptron {
 		};
 		
 		pesos[50] = pontuacao;
+		System.out.println("feedbackPerceptron "+feedbackPerceptron);
 		
 //		for(int j=0; j<pesos.length; j++) {
 //			System.out.print(pesos[j]+" ");
@@ -123,11 +125,11 @@ public class Perceptron {
 		
 		pesos[50] = pontos;
 		
-		Genetico gen = new Genetico(pesos, pontos);
+		Genetico gen = new Genetico(pesos, pontos, this.cont);
 		pesos = gen.run(pesos,pontuacao);
 		
 		atualizaPesos(pesos);
-		
+		this.cont++;
 	}
 	
 	public void atualizaPesos(double [] pesos) {
