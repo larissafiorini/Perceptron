@@ -67,7 +67,7 @@ public class Maze {
 		}
 		maze[0][1]="   P  ";
 		maze[0][2]="   P  ";
-		maze[1][1]="   B  ";
+		maze[1][1]="   O  ";
 		maze[2][0]="   P  ";
 		maze[2][1]="   P  ";
 		maze[3][1]="   O  ";

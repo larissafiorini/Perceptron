@@ -39,34 +39,29 @@ public class Agent {
 //		Thread.sleep(1000);
 //		
 //		currentDirection = "down";
-//		int [] position = maze.getAgentPosition();
-//		int [] before = {position[0], position[1]};
-//		position[0] = position[0]+1;
-//		currentPositionContent = maze.getMaze()[position[0]][position[1]];
-//		maze.updateAgentPosition(position, before);
+////		int [] position = maze.getAgentPosition();
+////		int [] before = {position[0], position[1]};
+////		position[0] = position[0]+1;
+////		currentPositionContent = maze.getMaze()[position[0]][position[1]];
+////		maze.updateAgentPosition(position, before);
+////		printData();
+//		andar(0);
 //		printData();
+//		Thread.sleep(1000);
 //		Thread.sleep(1000);
 //		
 //		
-//		currentDirection = "right";
-//		position = maze.getAgentPosition();
-//		before[0] = position[0];
-//		before[1] = position[1];
-//		position[1] = position[1]+1;
-//		currentPositionContent = maze.getMaze()[position[0]][position[1]];
-//		maze.updateAgentPosition(position, before);
+//		currentDirection = "rigth";
+////		position = maze.getAgentPosition();
+////		before[0] = position[0];
+////		before[1] = position[1];
+////		position[1] = position[1]+1;
+////		currentPositionContent = maze.getMaze()[position[0]][position[1]];
+////		maze.updateAgentPosition(position, before);
+////		printData();
+//		andar(0);
 //		printData();
 //		Thread.sleep(1000);
-//		
-//		
-//		currentDirection = "right";
-//		position = maze.getAgentPosition();
-//		before[0] = position[0];
-//		before[1] = position[1];
-//		position[1] = position[1]+1;
-//		currentPositionContent = maze.getMaze()[position[0]][position[1]];
-//		maze.updateAgentPosition(position, before);
-//		printData();
 //		Thread.sleep(1000);
 //		
 //		currentDirection = "down";
@@ -74,6 +69,10 @@ public class Agent {
 //		printData();
 //		Thread.sleep(1000);
 //		currentDirection = "down";
+//		andar(0);
+//		printData();
+//		Thread.sleep(1000);
+//		currentDirection = "left";
 //		andar(0);
 //		printData();
 //		Thread.sleep(1000);
@@ -153,7 +152,7 @@ public class Agent {
 					currentDirection = "left";
 					break;
 				case 5:
-					currentDirection = "right";
+					currentDirection = "rigth";
 					break;
 			}
 			
@@ -178,6 +177,9 @@ public class Agent {
 			}
 			case "   -  ":{
 				return 4;
+			}
+			case "   O  ":{
+				
 			}
 		}
 		
@@ -234,15 +236,15 @@ public class Agent {
 			return 3;
 		} else {
 			switch(conteudo) {
-				case "   B  ": {
+				case "   O  ": {
 					if(acao==0) {
 						//cai no buraco
 						log = log+"\nCaiu em buraco!";
 						points = points-100;
 						movements=0;
 						int [] inicialPosition = {0, 0};
-						currentPositionContent = maze.getMaze()[x][y];
-						int novaPosicao [] = {x, y};
+						currentPositionContent = maze.getMaze()[0][0];
+						int novaPosicao [] = {0, 0};
 						maze.updateAgentPosition(novaPosicao, before);
 						return 1;
 					} else {
@@ -253,10 +255,18 @@ public class Agent {
 							points = points-100;
 							movements=0;
 							int [] inicialPosition = {0, 0};
-							currentPositionContent = maze.getMaze()[x][y];
-							int novaPosicao [] = {x, y};
+							currentPositionContent = maze.getMaze()[0][0];
+							int novaPosicao [] = {0, 0};
 							maze.updateAgentPosition(novaPosicao, before);
 							return 1;
+						} else {
+							log = log+"\nPulou buraco!";
+							before[0] = position[0];
+							before[1] = position[1];
+							movements++;
+							currentPositionContent = maze.getMaze()[areaDepoisDaProximaArea[0]][areaDepoisDaProximaArea[1]];
+							maze.updateAgentPosition(areaDepoisDaProximaArea, before);
+							return codificaArea(conteudo);
 						}
 					}
 				}
