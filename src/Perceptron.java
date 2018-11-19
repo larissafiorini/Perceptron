@@ -22,6 +22,8 @@ public class Perceptron {
 	private Camada camadaSaida = new Camada();
 	private int pontuacao=0;
 	private int cont=0;
+	Genetico gen = new Genetico();
+	
 
 	public Perceptron() {
 		camadaEntrada.addNeuronio(new Neuronio("n1"));
@@ -125,8 +127,7 @@ public class Perceptron {
 		
 		pesos[50] = pontos;
 		
-		Genetico gen = new Genetico(pesos, pontos, this.cont);
-		pesos = gen.run(pesos,pontuacao);
+		pesos = gen.run(pesos,pontuacao, pontos);
 		
 		atualizaPesos(pesos);
 		this.cont++;

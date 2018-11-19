@@ -106,7 +106,7 @@ public class Agent {
 			feedbackPerceptron = andar(acao);
 			perceptron.reforcar(feedbackPerceptron, points);
 			printData();
-			Thread.sleep(2000);
+			Thread.sleep(500);
 		}
 	}
 	
@@ -352,7 +352,7 @@ public class Agent {
 	}
 	
 	public void printData() {
-		System.out.println(log+"      <------- log"+"\n_________________________________________________________");
+		//System.out.println(log+"      <------- log"+"\n_________________________________________________________");
 		System.out.print("Posicao dos baus: ");
 		for (int j = 0; j < 7; j = j + 2) {
 			System.out.print(" " + chestsPositions[j] + chestsPositions[j + 1]);
