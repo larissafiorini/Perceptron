@@ -29,9 +29,63 @@ public class Agent {
 		return coin;
 	}
 
-	public Agent(Maze maze) {
+	public Agent(Maze maze) throws InterruptedException {
 		this.maze = maze;
 		perceptron = new Perceptron();
+		
+		
+//--------------SEQUENCIA DE PASSOS PRA TESTAR O CAMINHAR DO AGENTE(Nao pertence a solucao final):
+		
+//		Thread.sleep(1000);
+//		
+//		currentDirection = "down";
+//		int [] position = maze.getAgentPosition();
+//		int [] before = {position[0], position[1]};
+//		position[0] = position[0]+1;
+//		currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//		maze.updateAgentPosition(position, before);
+//		printData();
+//		Thread.sleep(1000);
+//		
+//		
+//		currentDirection = "right";
+//		position = maze.getAgentPosition();
+//		before[0] = position[0];
+//		before[1] = position[1];
+//		position[1] = position[1]+1;
+//		currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//		maze.updateAgentPosition(position, before);
+//		printData();
+//		Thread.sleep(1000);
+//		
+//		
+//		currentDirection = "right";
+//		position = maze.getAgentPosition();
+//		before[0] = position[0];
+//		before[1] = position[1];
+//		position[1] = position[1]+1;
+//		currentPositionContent = maze.getMaze()[position[0]][position[1]];
+//		maze.updateAgentPosition(position, before);
+//		printData();
+//		Thread.sleep(1000);
+//		
+//		currentDirection = "down";
+//		andar(0);
+//		printData();
+//		Thread.sleep(1000);
+//		currentDirection = "down";
+//		andar(0);
+//		printData();
+//		Thread.sleep(1000);
+//		currentDirection = "left";
+//		andar(0);
+//		printData();
+//		Thread.sleep(1000);
+//		currentDirection = "down";
+//		andar(0);
+//		printData();
+//		Thread.sleep(1000);
+//		System.exit(0);
 	}
 
 
@@ -140,7 +194,7 @@ public class Agent {
 		int[] areaDepoisDaProximaArea = new int[2];
 		before[0] = position[0];
 		before[1] = position[1];
-		int x=-1, y=-1;
+		int x=0, y=0;
 
 		switch (currentDirection) {
 			case "up":
@@ -148,21 +202,25 @@ public class Agent {
 				y = position[1];
 				areaDepoisDaProximaArea[0] = x-1;
 				areaDepoisDaProximaArea[1] = y;
+				break;
 			case "down":
 				x = position[0] + 1;
 				y = position[1];
 				areaDepoisDaProximaArea[0] = x+1;
 				areaDepoisDaProximaArea[1] = y;
+				break;
 			case "left":
 				x = position[0];
 				y = position[1] -1;
 				areaDepoisDaProximaArea[0] = x;
 				areaDepoisDaProximaArea[1] = y-1;
+				break;
 			case "rigth":
 				x = position[0];
 				y = position[1] +1;
 				areaDepoisDaProximaArea[0] = x;
 				areaDepoisDaProximaArea[1] = y+1;
+				break;
 		}
 		String conteudo = scanPos(x, y);
 		if(conteudo.equals("invalid position") || conteudo.contains("P")) {
@@ -170,9 +228,9 @@ public class Agent {
 			points = points-100;
 			movements=0;
 			int [] inicialPosition = {0, 0};
-			before = new int[2];
-			maze.updateAgentPosition(inicialPosition, before);
-			currentPositionContent = "   -  ";
+			currentPositionContent = maze.getMaze()[0][0];
+			int novaPosicao [] = {0, 0};
+			maze.updateAgentPosition(novaPosicao, before);
 			return 3;
 		} else {
 			switch(conteudo) {
@@ -183,9 +241,9 @@ public class Agent {
 						points = points-100;
 						movements=0;
 						int [] inicialPosition = {0, 0};
-						before = new int[2];
-						maze.updateAgentPosition(inicialPosition, before);
-						currentPositionContent = "   -  ";
+						currentPositionContent = maze.getMaze()[x][y];
+						int novaPosicao [] = {x, y};
+						maze.updateAgentPosition(novaPosicao, before);
 						return 1;
 					} else {
 						//tenta pular buraco
@@ -195,9 +253,9 @@ public class Agent {
 							points = points-100;
 							movements=0;
 							int [] inicialPosition = {0, 0};
-							before = new int[2];
-							maze.updateAgentPosition(inicialPosition, before);
-							currentPositionContent = "   -  ";
+							currentPositionContent = maze.getMaze()[x][y];
+							int novaPosicao [] = {x, y};
+							maze.updateAgentPosition(novaPosicao, before);
 							return 1;
 						}
 					}
@@ -205,12 +263,16 @@ public class Agent {
 				case "   S  ": {
 					log = log+"\nEncontrou Saida! +100 pontos";
 					points = points+100;
+					before[0] = position[0];
+					before[1] = position[1];
 					movements++;
 					currentPositionContent = maze.getMaze()[x][y];
 					break;
 				}
 				case "   -  ": {
 					log = log+"\nAndou uma casa vazia!";
+					before[0] = position[0];
+					before[1] = position[1];
 					movements++;
 					currentPositionContent = maze.getMaze()[x][y];
 					break;
@@ -220,7 +282,9 @@ public class Agent {
 			if(conteudo.replaceAll(" ", "").matches("^[0-9]{2}|^[0-9]")) {
 				log = log+"\nColetou moedas! + "+ conteudo.replaceAll(" ", "")+" pontos";
 				points = points+Integer.parseInt(conteudo.replaceAll(" ", ""));
-				currentPositionContent = "   -  ";
+				before[0] = position[0];
+				before[1] = position[1];
+				currentPositionContent = maze.getMaze()[x][y];
 				movements++;
 			}
 		}
@@ -352,7 +416,7 @@ public class Agent {
 	}
 	
 	public void printData() {
-		//System.out.println(log+"      <------- log"+"\n_________________________________________________________");
+		System.out.println(log+"      <------- log"+"\n_________________________________________________________");
 		System.out.print("Posicao dos baus: ");
 		for (int j = 0; j < 7; j = j + 2) {
 			System.out.print(" " + chestsPositions[j] + chestsPositions[j + 1]);
