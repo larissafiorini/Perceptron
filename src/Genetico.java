@@ -12,10 +12,10 @@ public class Genetico {
 		
 	}
 
-	public double[] run(double[] pesos, int pontuacao, int pontos) {
+	public double[] run(double[] pesos, int pontos) {
 		if(this.cont==0) {
 			populacao[0] = pesos;
-			populacao[0][50] = pontuacao;
+			populacao[0][50] = pontos;
 
 			for (int i = 1; i < 5; i++) {
 				for (int j = 0; j < 50; j++) {
@@ -25,7 +25,7 @@ public class Genetico {
 			for (int i = 0; i < 100; i++) {
 				int j = random.nextInt(4) + 1;
 				int k = random.nextInt(50);
-				populacao[1][j] = random.nextDouble() * -1;
+				populacao[j][k] = random.nextDouble() * -1;
 			}
 			contCromossomos = contCromossomos+5;
 			this.cont++;
@@ -33,27 +33,30 @@ public class Genetico {
 		
 		
 		
-		if (this.cont < 4) {
+		if (this.cont <= 5) {
+			populacao[cont-1][50] = pontos;
 			this.cont++;
 			printPopulacao(populacao, 50);
-			return populacao[this.cont];
-		}
-		
-		
-		
-		double menor = populacao[0][50];
-		int id = 0;
-		for (int i = 0; i < 5; i++) {
-			if (populacao[i][50] < menor) {
-				menor = populacao[i][50];
-				id = i;
+			if(cont<5) {
+				return populacao[this.cont-1];
 			}
 		}
-
-		populacao[id][50] = pontuacao;
-		elitizar(pesos, pontuacao);
+		
+		
+		
+//		double menor = populacao[0][50];
+//		int id = 0;
+//		for (int i = 0; i < 5; i++) {
+//			if (populacao[i][50] < menor) {
+//				menor = populacao[i][50];
+//				id = i;
+//			}
+//		}
+//
+//		populacao[id][50] = pontuacao;
+		elitizar(pesos, pontos);
 		gerar(populacao, intermediaria);
-		this.cont++;
+		this.cont=1;
 		printPopulacao(populacao, 50);
 		return populacao[0];
 		// // System.out.println("\nPopulacao: ");
@@ -116,6 +119,18 @@ public class Genetico {
 			}
 			linha++;
 		}
+//		MUTACAO:
+		for (int i = 0; i < 25; i++) {
+			int j = random.nextInt(4) + 1;
+			int k = random.nextInt(50);
+			populacao[j][k] = random.nextDouble() * -1;
+		}
+		for (int i = 0; i < 25; i++) {
+			int j = random.nextInt(4) + 1;
+			int k = random.nextInt(50);
+			populacao[j][k] = random.nextDouble();
+		}
+		
 		clonar(populacao, intermediaria);
 	}
 

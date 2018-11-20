@@ -20,7 +20,6 @@ public class Perceptron {
 	
 	private Camada camadaEntrada = new Camada();
 	private Camada camadaSaida = new Camada();
-	private int pontuacao=0;
 	private int cont=0;
 	Genetico gen = new Genetico();
 	
@@ -94,40 +93,40 @@ public class Perceptron {
 			
 		};
 		
-		pesos[50] = pontuacao;
-		System.out.println("feedbackPerceptron "+feedbackPerceptron);
-		
-//		for(int j=0; j<pesos.length; j++) {
-//			System.out.print(pesos[j]+" ");
+//		pesos[50] = pontuacao;
+//		System.out.println("feedbackPerceptron "+feedbackPerceptron);
+//		
+////		for(int j=0; j<pesos.length; j++) {
+////			System.out.print(pesos[j]+" ");
+////		}
+////		System.out.println("\n"+pesos.length);
+//		
+//		switch(feedbackPerceptron) {
+//			case 1:
+//				//BURACO
+//				pontuacao -= 100.0;
+//				System.out.println("pontuacao : "+pontuacao);
+//			case 2:
+//				//SAIDA
+//				pontuacao += 100.0;
+//				System.out.println("pontuacao : "+pontuacao);
+//			case 3:
+//				//PAREDE
+//				pontuacao -= 100.0;
+//				System.out.println("pontuacao : "+pontuacao);
+//			case 4:
+//				//VAZIO
+//				pontuacao += 100.0;
+//				System.out.println("pontuacao : "+pontuacao);
+//			case 5:
+//				//MOEDAS
+//				pontuacao += 100.0;
+//				System.out.println("pontuacao : "+pontuacao);
 //		}
-//		System.out.println("\n"+pesos.length);
-		
-		switch(feedbackPerceptron) {
-			case 1:
-				//BURACO
-				pontuacao -= 100.0;
-				System.out.println("pontuacao : "+pontuacao);
-			case 2:
-				//SAIDA
-				pontuacao += 100.0;
-				System.out.println("pontuacao : "+pontuacao);
-			case 3:
-				//PAREDE
-				pontuacao -= 100.0;
-				System.out.println("pontuacao : "+pontuacao);
-			case 4:
-				//VAZIO
-				pontuacao += 100.0;
-				System.out.println("pontuacao : "+pontuacao);
-			case 5:
-				//MOEDAS
-				pontuacao += 100.0;
-				System.out.println("pontuacao : "+pontuacao);
-		}
 		
 		pesos[50] = pontos;
 		
-		pesos = gen.run(pesos,pontuacao, pontos);
+		pesos = gen.run(pesos, pontos);
 		
 		atualizaPesos(pesos);
 		this.cont++;

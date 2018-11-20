@@ -157,7 +157,10 @@ public class Agent {
 			}
 			
 			feedbackPerceptron = andar(acao);
-			perceptron.reforcar(feedbackPerceptron, points);
+			if(movements==0) {
+				perceptron.reforcar(feedbackPerceptron, points);
+				points=0;
+			}
 			printData();
 			Thread.sleep(500);
 		}
@@ -227,7 +230,7 @@ public class Agent {
 		String conteudo = scanPos(x, y);
 		if(conteudo.equals("invalid position") || conteudo.contains("P")) {
 			log = log+"\nBateu em parede! ";
-			points = points-100;
+//			points = points-100;
 			movements=0;
 			int [] inicialPosition = {0, 0};
 			currentPositionContent = maze.getMaze()[0][0];
@@ -240,7 +243,7 @@ public class Agent {
 					if(acao==0) {
 						//cai no buraco
 						log = log+"\nCaiu em buraco!";
-						points = points-100;
+//						points = points-100;
 						movements=0;
 						int [] inicialPosition = {0, 0};
 						currentPositionContent = maze.getMaze()[0][0];
@@ -252,7 +255,7 @@ public class Agent {
 						String conteudoAreaPosterior = scanPos(areaDepoisDaProximaArea[0], areaDepoisDaProximaArea[1]); 
 						if(conteudoAreaPosterior.equals("invalid position") || conteudoAreaPosterior.contains("P")) {
 							log = log+"\nPosicao depois do buraco invalida! Caiu no buraco!";
-							points = points-100;
+//							points = points-100;
 							movements=0;
 							int [] inicialPosition = {0, 0};
 							currentPositionContent = maze.getMaze()[0][0];
@@ -281,6 +284,7 @@ public class Agent {
 				}
 				case "   -  ": {
 					log = log+"\nAndou uma casa vazia!";
+					points = points+10;
 					before[0] = position[0];
 					before[1] = position[1];
 					movements++;
