@@ -53,9 +53,7 @@ public class Perceptron {
 		for(Neuronio neuronio: camadaSaida.getNeuronios()) {
 			neuronio.calculaY(y1, y2, y3, y4);
 		}
-		camadaSaida.getNeuronios().forEach(n -> {
-			System.out.println(n.toString());
-		});
+
 		int [] saidas = {camadaSaida.getNeuronioByName("n5").getY(),
 						camadaSaida.getNeuronioByName("n6").getY(),
 						camadaSaida.getNeuronioByName("n7").getY(),
@@ -93,37 +91,6 @@ public class Perceptron {
 			
 		};
 		
-//		pesos[50] = pontuacao;
-//		System.out.println("feedbackPerceptron "+feedbackPerceptron);
-//		
-////		for(int j=0; j<pesos.length; j++) {
-////			System.out.print(pesos[j]+" ");
-////		}
-////		System.out.println("\n"+pesos.length);
-//		
-//		switch(feedbackPerceptron) {
-//			case 1:
-//				//BURACO
-//				pontuacao -= 100.0;
-//				System.out.println("pontuacao : "+pontuacao);
-//			case 2:
-//				//SAIDA
-//				pontuacao += 100.0;
-//				System.out.println("pontuacao : "+pontuacao);
-//			case 3:
-//				//PAREDE
-//				pontuacao -= 100.0;
-//				System.out.println("pontuacao : "+pontuacao);
-//			case 4:
-//				//VAZIO
-//				pontuacao += 100.0;
-//				System.out.println("pontuacao : "+pontuacao);
-//			case 5:
-//				//MOEDAS
-//				pontuacao += 100.0;
-//				System.out.println("pontuacao : "+pontuacao);
-//		}
-		
 		pesos[50] = pontos;
 		
 		pesos = gen.run(pesos, pontos);
@@ -151,93 +118,4 @@ public class Perceptron {
 			j = j+5;
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-//	public void treinamento() { // algoritmo Regra Delta
-//		// Treinamento
-//		int epocas = 0, i;
-//		double y, erro, erroGeral, eta = 1; // eta eh a constante (taxa) de aprendizagem
-//		System.out.println("--- TREINAMENTO");
-//		while (true) {
-//			epocas++;
-//			erroGeral = 0;
-//
-//			System.out.println("Epoca: " + epocas);
-//			for (i = 0; i < 4; i++) {
-//				// propagacao
-//				y = neuronio.calculaY(x1[i], x2[i],x3[i],x4[i]);
-//				// calcula do erro
-//				erro = d[i] - y;
-//				// ajuste dos pesos
-//				if (erro != 0) {
-//					neuronio.setW0(neuronio.getW0() + eta * erro);
-//					neuronio.setW1(neuronio.getW1() + eta * erro * x1[i]);
-//					neuronio.setW2(neuronio.getW2() + eta * erro * x2[i]);
-//					neuronio.setW3(neuronio.getW3() + eta * erro * x3[i]);
-//					neuronio.setW4(neuronio.getW4() + eta * erro * x4[i]);
-//				}
-//				System.out.println("Neuronio - pesos: " + neuronio);
-//				erroGeral = erroGeral + abs(erro);
-//			}
-//			// para quando para todas as entradas o erro for zero
-//			if (erroGeral == 0)
-//				break;
-//		}
-//	}
-
-//	public void generalizacao() { // uso da rede
-//		// Generalizacao - Teste da rede
-//		int entrada1, entrada2, entrada3, entrada4;
-//		Scanner dados = new Scanner(System.in);
-//		System.out.println("\n--- GENERALIZACAO");
-//		while (true) {
-//			
-//			/*
-//			 * Entradas (relativas a percepcao do agente):
-//			 * 1 - Cima
-//			 * 2 - Baixo
-//			 * 3 - Esquerda
-//			 * 4 - Direita
-//			 * 
-//			 * */
-//			
-//			
-//			// digita novas entradas
-//			System.out.println("Digite -100 para encerrar");
-//			System.out.print("Digite a entrada (x1): ");
-//			entrada1 = dados.nextInt();
-//			if (entrada1 == -100)
-//				break;
-//
-//			System.out.print("Digite a entrada (x2): ");
-//			entrada2 = dados.nextInt();
-//			if (entrada2 == -100)
-//				break;
-//
-//			System.out.print("Digite a entrada (x3): ");
-//			entrada3 = dados.nextInt();
-//			if (entrada3 == -100)
-//				break;
-//
-//			System.out.print("Digite a entrada (x4): ");
-//			entrada4 = dados.nextInt();
-//			if (entrada4 == -100)
-//				break;
-//
-//			// propagacao
-////			System.out.println("Saida Gerada pela rede: " + neuronio.calculaY(entrada1, entrada2, entrada3, entrada4));
-//		}
-//	}
 }

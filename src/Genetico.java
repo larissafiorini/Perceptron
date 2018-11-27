@@ -36,37 +36,16 @@ public class Genetico {
 		if (this.cont <= 5) {
 			populacao[cont-1][50] = pontos;
 			this.cont++;
-			printPopulacao(populacao, 50);
 			if(cont<5) {
 				return populacao[this.cont-1];
 			}
 		}
 		
-		
-		
-//		double menor = populacao[0][50];
-//		int id = 0;
-//		for (int i = 0; i < 5; i++) {
-//			if (populacao[i][50] < menor) {
-//				menor = populacao[i][50];
-//				id = i;
-//			}
-//		}
-//
-//		populacao[id][50] = pontuacao;
 		elitizar(pesos, pontos);
 		gerar(populacao, intermediaria);
 		this.cont=1;
-		printPopulacao(populacao, 50);
 		return populacao[0];
-		// // System.out.println("\nPopulacao: ");
-		// popular(populacao, pesos);
-		// printPopulacao(populacao, 50);
-		// populacao[0][50] = pontuacao;
-		//
-		// aptidar(populacao, pontuacao);
-		//
-		// elitizar(populacao, intermediaria);
+
 	}
 
 	public void elitizar(double[] pesos, int pontuacao) {
@@ -78,16 +57,6 @@ public class Genetico {
 		}
 		clonar(intermediaria[0], populacao[indexMaior]);
 	}
-
-	// static void elitizar(double[][] populacao, double[][] intermediaria) {
-	// int indexMaior = 0;
-	// for (int i = 0; i < 5; i++) {
-	// if (populacao[i][50] > populacao[indexMaior][50]) {
-	// indexMaior = i;
-	// }
-	// }
-	// clonar(intermediaria[0], populacao[indexMaior]);
-	// }
 
 	static void clonar(double[][] destino, double[][] origem) {
 		for (int i = 0; i < 5; i++) {
@@ -120,15 +89,18 @@ public class Genetico {
 			linha++;
 		}
 //		MUTACAO:
-		for (int i = 0; i < 25; i++) {
-			int j = random.nextInt(4) + 1;
-			int k = random.nextInt(50);
-			populacao[j][k] = random.nextDouble() * -1;
-		}
-		for (int i = 0; i < 25; i++) {
-			int j = random.nextInt(4) + 1;
-			int k = random.nextInt(50);
-			populacao[j][k] = random.nextDouble();
+		for(int l=0 ;l<1; l++) {
+			
+			for (int i = 0; i < 25; i++) {
+				int j = random.nextInt(4) + 1;
+				int k = random.nextInt(50);
+				populacao[j][k] = random.nextDouble() * -1;
+			}
+			for (int i = 0; i < 25; i++) {
+				int j = random.nextInt(4) + 1;
+				int k = random.nextInt(50);
+				populacao[j][k] = random.nextDouble();
+			}
 		}
 		
 		clonar(populacao, intermediaria);
@@ -153,34 +125,4 @@ public class Genetico {
 			System.out.println("");
 		}
 	}
-
-	static void popular(double[][] populacao, double[] pesos) {
-
-		// pesos aleatorios entre -1;1
-		// Random r = new Random();
-
-		for (int i = 0; i < 5; i++) {
-
-			populacao[i] = pesos;
-		}
-		// for (int j = 0; j < 50; j++) {
-		// populacao[i][j] = r.nextInt((0 + 1 + 1) - 1);
-		// }
-	}
-
-	// static void aptidar(double[][] populacao, int pontuacao) {
-	//
-	// for (int i = 0; i < 5; i++) {
-	//
-	//
-	//
-	//// System.out.println(" pontuacao de cada pop: " + populacao[i][50]);
-	//
-	// //
-	// // for (int j = 0; j < 50; j++) {
-	// //
-	// // }
-	// }
-	//
-	// }
 }

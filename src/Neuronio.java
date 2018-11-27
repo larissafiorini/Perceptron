@@ -64,16 +64,16 @@ public class Neuronio {
 	}
 
 	public double calculaV(double x1, double x2, double x3, double x4) {
+		x1*=0.25;
+		x2*=0.25;
+		x3*=0.25;
+		x4*=0.25;
 		return w0 + w1 * x1 + w2 * x2 + w3 * x3 + w4 * x4;
 	} // calcula o campo local induzido
 
 	public void calculaY(int x1, int x2, int x3, int x4) { // aplica a funcao
 		double v = calculaV(x1, x2, x3, x4);
 		y= (int) Math.round(v);
-//		if (v >= 0)
-//			y = 1;
-//		else
-//			y = 0;
 	}
 
 	public void setW0(double w0) {
